@@ -45,7 +45,7 @@ app.post("/repositories", (request, response) => {
   const { title, url, techs } = request.body;
 
   /* Montando array com dados passados pelo cliente */
-  const repository = { id:uuid(), title, url, techs, like: 0 };
+  const repository = { id:uuid(), title, url, techs, likes: 0 };
 
   /* Inserindo os dados no banco de dados */
   repositories.push(repository);
@@ -70,7 +70,7 @@ app.put("/repositories/:id", (request, response) => {
   }
 
   /* Resgatando o número de likes do repositório */
-  const likes = repositories[repositoryIndex].like;
+  const likes = repositories[repositoryIndex].likes;
   
   /* Montando novo array com alterações */
   const repository = {
@@ -78,7 +78,7 @@ app.put("/repositories/:id", (request, response) => {
     title,
     url,
     techs,
-    like: likes
+    likes: likes
   }
 
   /* Incluindo alterações no banco de dados */
@@ -119,19 +119,14 @@ app.post("/repositories/:id/like", (request, response) => {
     return response.status(400).json({error: "Repository not found!"})
   }
 
-  /* Pegando valor atual do like */
-  const likes = repositories[repositoryIndex].like;
-
   /* Incrementando like */
-  const like = likes + 1;
+  const likes = repositories[repositoryIndex].likes+1;
 
   /* Adicionando likes no repositório */
-  repositories[repositoryIndex].like = like;
-
-  const results = repositories[repositoryIndex];
+  repositories[repositoryIndex].likes = likes;
 
   /* Resposta ao cliente */
-  return response.json(results);
+  return response.json(repositories[repositoryIndex]);
 });
 
 module.exports = app;
